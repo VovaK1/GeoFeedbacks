@@ -7,6 +7,8 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require("terser-webpack-plugin");
 const Handlebars = require("handlebars");
+const regeneratorRuntime = require("regenerator-runtime");
+
 
 const optimization = () => {
   const configObj = {

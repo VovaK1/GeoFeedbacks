@@ -1,33 +1,51 @@
 var myMap;
-const form = `
-<div id="feedback">
-  <div id="heading">Отзыв:</div>
-  <form action="" id="form">
-    <input type="text" name="name" id="input-name" placeholder="Укажите ваше имя">
-    <input type="text" name="place" id="input-place" placeholder="Укажите место">
-    <textarea name="feedback" id="input-feedback" placeholder="Оставить отзыв"></textarea>
-    <button id="button">Добавить</button>
-  </form>
-</div>`
+
+const balloonForm = document.getElementById('form-balloon').innerHTML;
 
  function mapInit() {
-     myMap = ymaps.ready(() => {
-     myMap = new ymaps.Map('map', {
-      center: [59.91, 30.3],
-      zoom: 10,
-      controls: ['zoomControl'],
-      behaviors: ['drag'],
-    })
-
-     myMap.events.add('click', e => {
-       myMap.balloon.open(e.get('coords'), form)
-     }) 
-  })
-
-  return myMap;
+     return new Promise((resolve) => {
+        myMap = ymaps.ready(() => {
+        myMap = new ymaps.Map('map', {
+         center: [59.91, 30.3],
+         zoom: 12,
+         controls: ['zoomControl'],
+         behaviors: ['drag'],
+       })
+       resolve(myMap);
+     })
+     })
 }
+
+function openBalloon(map, e) {
+    let coords = [];
+    coords = e.get('coords');
+    map.balloon.open(coords, balloonForm);
+    return coords;
+}
+
+function getPlacemarks() {
+  return JSON.parse(localStorage.data || '[]');
+}
+function updateStorage(placemarks) {
+  localStorage.data = JSON.stringify(placemarks);
+  return JSON.parse(localStorage.data)
+}
+
+function updateMap(placemarks, map) {
+  if (placemarks) {
+    for (let item of placemarks) {
+      let placemark = new ymaps.Placemark(item.coords);
+      map.geoObjects.add(placemark);
+    }
+  }
+ } 
+
 
 
 export {
-  mapInit
+  mapInit,
+  openBalloon,
+  updateMap,
+  getPlacemarks,
+  updateStorage
 }
