@@ -20,10 +20,6 @@ if (obj.name && obj.place && obj.feedback) {
 }
 }
 
-function updateStorage() {
-  
-}
-
 export {
   newFeedback,
 }

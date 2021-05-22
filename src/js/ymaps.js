@@ -1,6 +1,10 @@
+import {newFeedback} from './feedbacks';
+
 var myMap;
 
 const balloonForm = document.getElementById('form-balloon').innerHTML;
+const template = Handlebars.compile(balloonForm);
+
 
  function mapInit() {
      return new Promise((resolve) => {
@@ -16,9 +20,7 @@ const balloonForm = document.getElementById('form-balloon').innerHTML;
      })
 }
 
-function openBalloon(map, e) {
-    let coords = [];
-    coords = e.get('coords');
+function openBalloon(map, coords) {
     map.balloon.open(coords, balloonForm);
     return coords;
 }
@@ -31,21 +33,21 @@ function updateStorage(placemarks) {
   return JSON.parse(localStorage.data)
 }
 
-function updateMap(placemarks, map) {
-  if (placemarks) {
-    for (let item of placemarks) {
-      let placemark = new ymaps.Placemark(item.coords);
-      map.geoObjects.add(placemark);
-    }
+
+
+
+function updateBalloon(coords) {
+  const ul = document.getElementById('other-feedbacks');
+  if (array) {
+  ul.classList.add('visible');
+
   }
- } 
-
-
+}
 
 export {
   mapInit,
   openBalloon,
-  updateMap,
+  
   getPlacemarks,
   updateStorage
 }

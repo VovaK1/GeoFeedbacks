@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+  <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
   <title>{{htmlWebpackPlugin.options.title}}</title>
 </head>
 <body>
@@ -12,6 +13,7 @@
 
 <script type="text/balloon-template" id="form-balloon">
 <div id="feedback">
+  <ul id="other-feedbacks"></ul>
   <div id="heading">Отзыв:</div>
   <form action="" id="form">
     <input  type="text" name="name" id="input-name" placeholder="Укажите ваше имя">

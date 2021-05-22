@@ -53,6 +53,17 @@ input {
   text-align: center;
   cursor: pointer;
   border: none;
- 
+}
+
+#other-feedbacks {
+  list-style: none;
+  display: none;
+  flex-direction: column;
+  max-height: 100px;  
+  border-bottom: 1px solid #E7E7E7;
+  margin-bottom: 10px;
+  &.visible {
+    display: flex;
+  }
 }
 
