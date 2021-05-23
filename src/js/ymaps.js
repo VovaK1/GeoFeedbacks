@@ -1,10 +1,6 @@
 import {newFeedback} from './feedbacks';
-
+import template from '.././templates/feedback.hbs'
 var myMap;
-
-const balloonForm = document.getElementById('form-balloon').innerHTML;
-const template = Handlebars.compile(balloonForm);
-
 
  function mapInit() {
      return new Promise((resolve) => {
@@ -21,7 +17,7 @@ const template = Handlebars.compile(balloonForm);
 }
 
 function openBalloon(map, coords) {
-    map.balloon.open(coords, balloonForm);
+    map.balloon.open(coords, document.getElementById('form-balloon').innerHTML);
     return coords;
 }
 
@@ -35,19 +31,23 @@ function updateStorage(placemarks) {
 
 
 
-
-function updateBalloon(coords) {
-  const ul = document.getElementById('other-feedbacks');
-  if (array) {
-  ul.classList.add('visible');
-
+function updateBalloon(samePlaceMarks) {
+  if (!myMap.balloon.isOpen()) {
+    const ul = document.createElement('ul');
+    ul.classList.add('feedbacks')
+    document.getElementById('form-balloon').prepend(ul);
+    ul.innerHTML = template ({ samePlaceMarks });
+  } else {
+   if(document.getElementById('form-balloon').firstElementChild) {
+    document.getElementById('form-balloon').firstElementChild.remove();
+   }
   }
 }
 
 export {
   mapInit,
   openBalloon,
-  
   getPlacemarks,
-  updateStorage
+  updateStorage,
+  updateBalloon
 }

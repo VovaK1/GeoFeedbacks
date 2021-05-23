@@ -8,13 +8,6 @@ body {
   box-sizing: border-box;
 }
 
-#feedback {
-  width: 330px;
-  height: 330px;
-  padding: 20px 10px;
-  overflow: hidden;
-}
-
 #form {
   display: flex;
   flex-direction: column;
@@ -29,14 +22,15 @@ body {
 
 input {
   margin-bottom: 10px;
+  width: 300px;
 }
 
 #input-name {
-  height: 38px;
+  height: 35px;
 }
 
 #input-place {
-  height: 38px;
+  height: 35px;
 }
 
 #input-feedback {
@@ -46,7 +40,7 @@ input {
 
 #button {
   width: 107px;
-  height: 38px;
+  height: 35px;
   background: #FF8663;
   color: #fff;
   font-weight: 700;
@@ -55,15 +49,29 @@ input {
   border: none;
 }
 
-#other-feedbacks {
+.feedbacks {
   list-style: none;
-  display: none;
+  display: flex;
   flex-direction: column;
-  max-height: 100px;  
+  overflow: scroll;
+  max-height: 110px;  
   border-bottom: 1px solid #E7E7E7;
   margin-bottom: 10px;
-  &.visible {
-    display: flex;
+}
+
+.feedback {
+  max-height: 50px;
+
+  &__top {
+    display: inline-flex;
+  }
+
+  &__name {
+    color: black;
+    margin-right: 8px;
+  }
+  &__place, &__text {
+    color: #8f8f8f;
   }
 }
 

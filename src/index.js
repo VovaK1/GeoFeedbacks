@@ -1,7 +1,10 @@
-import { mapInit, openBalloon, updateStorage, getPlacemarks,  } from './js/ymaps';
+import { mapInit, openBalloon, updateStorage, getPlacemarks, updateBalloon  } from './js/ymaps';
 import { newFeedback,   } from './js/feedbacks';
 const balloonForm = document.getElementById('form-balloon').innerHTML;
+
 import './styles/main.scss'
+
+
 
 
 (async () => {
@@ -9,29 +12,28 @@ const map = await mapInit();
 let placemarks = getPlacemarks();
 updateMap(placemarks, map);
 
-console.log(placemarks)
 
 let coords = [];
 
 map.events.add('click', e => {
 coords = e.get('coords');
 if (!map.balloon.isOpen()) {
- openBalloon(map, coords);
+openBalloon(map, coords);
 } else {
-  map.balloon.close();
+updateBalloon()
+map.balloon.close();
 }
 })
 
 document.addEventListener('click', e => {
- 
   if (e.target.id === 'button') {
     e.preventDefault()
     const feedback = newFeedback(coords);
     if (feedback) {
     placemarks.push(feedback);
     updateStorage(placemarks);
-    console.log(placemarks)
     updateMap(placemarks, map);
+    updateBalloon()
     map.balloon.close();
   } else {
     map.balloon.close();
@@ -45,22 +47,27 @@ function updateMap(placemarks, map) {
       map.geoObjects.add(placemark);
       placemark.events.add('click', e => {
         const samePlaceMarks = [];
-        coords = openBalloon(map, placemark.geometry._coordinates);
         placemarks.forEach(function(currentMark) {
-          console.log(currentMark.coords)
-          console.log(coords)
-          console.log(currentMark.coords == coords)
-          if (currentMark.coords == coords) {
+          if (arrayCompare(currentMark.coords, placemark.geometry._coordinates)) {
             samePlaceMarks.push(currentMark);
-
           }
         })
-        console.log(samePlaceMarks)
+        updateBalloon(samePlaceMarks);
+        coords = openBalloon(map, placemark.geometry._coordinates);
       })
-
+      
     }
   }
  } 
+
+ function arrayCompare(a, b)
+{
+    for(let i = 0; i < a.length; i++) {   
+       if(a[i] != b[i])
+      return false;
+    }
+    return true;
+}
 
 })();
 
