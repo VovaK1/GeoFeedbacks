@@ -16,6 +16,26 @@ var myMap;
      })
 }
 
+// function clusterInit(map, array) {
+//   clusterer.add(array);
+//   clusterer.events.add("click", (e) => {
+//   let coords = e.get("target").geometry.getCoordinates();
+//       openBalloon(map, coords);
+//      });
+//   map.geoObjects.add(clusterer);
+// }
+
+function clusterInit(map, array) {
+    const clusterer = new ymaps.Clusterer({
+      clusterDisableClickZoom: true,
+      groupByCoordinates: true,
+      clusterOpenBalloonOnClick: false,
+    });
+    clusterer.add(array);
+    map.geoObjects.add(clusterer);
+    return clusterer;
+}
+
 function openBalloon(map, coords) {
     map.balloon.open(coords, document.getElementById('form-balloon').innerHTML);
     return coords;
@@ -28,8 +48,6 @@ function updateStorage(placemarks) {
   localStorage.data = JSON.stringify(placemarks);
   return JSON.parse(localStorage.data)
 }
-
-
 
 function updateBalloon(samePlaceMarks) {
   if (!myMap.balloon.isOpen()) {
@@ -44,10 +62,21 @@ function updateBalloon(samePlaceMarks) {
   }
 }
 
+ function arrayCompare(a, b)
+{
+    for(let i = 0; i < a.length; i++) {   
+       if(a[i] != b[i])
+      return false;
+    }
+    return true;
+}
+
 export {
   mapInit,
   openBalloon,
   getPlacemarks,
   updateStorage,
-  updateBalloon
+  updateBalloon,
+  clusterInit,
+  arrayCompare
 }

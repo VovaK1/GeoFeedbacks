@@ -1,4 +1,4 @@
-import { mapInit, openBalloon, updateStorage, getPlacemarks, updateBalloon  } from './js/ymaps';
+import { mapInit, openBalloon, updateStorage, getPlacemarks, updateBalloon, clusterInit, arrayCompare  } from './js/ymaps';
 import { newFeedback,   } from './js/feedbacks';
 const balloonForm = document.getElementById('form-balloon').innerHTML;
 
@@ -6,12 +6,11 @@ import './styles/main.scss'
 
 
 
-
 (async () => {
 const map = await mapInit();
 let placemarks = getPlacemarks();
-updateMap(placemarks, map);
 
+updateMap(placemarks, map);
 
 let coords = [];
 
@@ -33,6 +32,7 @@ document.addEventListener('click', e => {
     placemarks.push(feedback);
     updateStorage(placemarks);
     updateMap(placemarks, map);
+   
     updateBalloon()
     map.balloon.close();
   } else {
@@ -42,32 +42,28 @@ document.addEventListener('click', e => {
 
 function updateMap(placemarks, map) {
   if (placemarks) {
+    const myGeoObjects = [];
     for (let item of placemarks) {
-      let placemark = new ymaps.Placemark(item.coords, {balloonContent: ''});
+      let placemark = new ymaps.Placemark(item.coords);
+      myGeoObjects.push(placemark);
       map.geoObjects.add(placemark);
-      placemark.events.add('click', e => {
-        const samePlaceMarks = [];
-        placemarks.forEach(function(currentMark) {
-          if (arrayCompare(currentMark.coords, placemark.geometry._coordinates)) {
-            samePlaceMarks.push(currentMark);
-          }
-        })
+      const clusterer =  clusterInit(map, myGeoObjects);  
+      clusterer.events.add('click', e => {
+         coords = e.get('target').geometry.getCoordinates();
+          console.log(coords)
+          const samePlaceMarks = [];
+          placemarks.forEach(function(currentMark) {
+            if (arrayCompare(currentMark.coords, coords)) {
+              samePlaceMarks.push(currentMark);
+            }
+          })
         updateBalloon(samePlaceMarks);
-        coords = openBalloon(map, placemark.geometry._coordinates);
+        coords = openBalloon(map, coords);
       })
-      
     }
   }
  } 
 
- function arrayCompare(a, b)
-{
-    for(let i = 0; i < a.length; i++) {   
-       if(a[i] != b[i])
-      return false;
-    }
-    return true;
-}
 
 })();
 

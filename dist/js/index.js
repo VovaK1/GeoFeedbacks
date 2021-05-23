@@ -30,45 +30,37 @@ var balloonForm = document.getElementById('form-balloon').innerHTML;
 
 
 (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__.default)( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default().mark(function _callee() {
-  var map, placemarks, coords, updateMap, arrayCompare;
+  var map, placemarks, coords, updateMap;
   return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default().wrap(function _callee$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
-          arrayCompare = function _arrayCompare(a, b) {
-            for (var i = 0; i < a.length; i++) {
-              if (a[i] != b[i]) return false;
-            }
-
-            return true;
-          };
-
           updateMap = function _updateMap(placemarks, map) {
             if (placemarks) {
+              var myGeoObjects = [];
+
               var _iterator = _createForOfIteratorHelper(placemarks),
                   _step;
 
               try {
-                var _loop = function _loop() {
+                for (_iterator.s(); !(_step = _iterator.n()).done;) {
                   var item = _step.value;
-                  var placemark = new ymaps.Placemark(item.coords, {
-                    balloonContent: ''
-                  });
+                  var placemark = new ymaps.Placemark(item.coords);
+                  myGeoObjects.push(placemark);
                   map.geoObjects.add(placemark);
-                  placemark.events.add('click', function (e) {
+                  var clusterer = (0,_js_ymaps__WEBPACK_IMPORTED_MODULE_2__.clusterInit)(map, myGeoObjects);
+                  clusterer.events.add('click', function (e) {
+                    coords = e.get('target').geometry.getCoordinates();
+                    console.log(coords);
                     var samePlaceMarks = [];
                     placemarks.forEach(function (currentMark) {
-                      if (arrayCompare(currentMark.coords, placemark.geometry._coordinates)) {
+                      if ((0,_js_ymaps__WEBPACK_IMPORTED_MODULE_2__.arrayCompare)(currentMark.coords, coords)) {
                         samePlaceMarks.push(currentMark);
                       }
                     });
                     (0,_js_ymaps__WEBPACK_IMPORTED_MODULE_2__.updateBalloon)(samePlaceMarks);
-                    coords = (0,_js_ymaps__WEBPACK_IMPORTED_MODULE_2__.openBalloon)(map, placemark.geometry._coordinates);
+                    coords = (0,_js_ymaps__WEBPACK_IMPORTED_MODULE_2__.openBalloon)(map, coords);
                   });
-                };
-
-                for (_iterator.s(); !(_step = _iterator.n()).done;) {
-                  _loop();
                 }
               } catch (err) {
                 _iterator.e(err);
@@ -78,10 +70,10 @@ var balloonForm = document.getElementById('form-balloon').innerHTML;
             }
           };
 
-          _context.next = 4;
+          _context.next = 3;
           return (0,_js_ymaps__WEBPACK_IMPORTED_MODULE_2__.mapInit)();
 
-        case 4:
+        case 3:
           map = _context.sent;
           placemarks = (0,_js_ymaps__WEBPACK_IMPORTED_MODULE_2__.getPlacemarks)();
           updateMap(placemarks, map);
@@ -113,7 +105,7 @@ var balloonForm = document.getElementById('form-balloon').innerHTML;
             }
           });
 
-        case 10:
+        case 9:
         case "end":
           return _context.stop();
       }
@@ -177,7 +169,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "openBalloon": () => (/* binding */ openBalloon),
 /* harmony export */   "getPlacemarks": () => (/* binding */ getPlacemarks),
 /* harmony export */   "updateStorage": () => (/* binding */ updateStorage),
-/* harmony export */   "updateBalloon": () => (/* binding */ updateBalloon)
+/* harmony export */   "updateBalloon": () => (/* binding */ updateBalloon),
+/* harmony export */   "clusterInit": () => (/* binding */ clusterInit),
+/* harmony export */   "arrayCompare": () => (/* binding */ arrayCompare)
 /* harmony export */ });
 /* harmony import */ var _feedbacks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./feedbacks */ "./src/js/feedbacks.js");
 /* harmony import */ var _templates_feedback_hbs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! .././templates/feedback.hbs */ "./src/templates/feedback.hbs");
@@ -198,6 +192,25 @@ function mapInit() {
       resolve(myMap);
     });
   });
+} // function clusterInit(map, array) {
+//   clusterer.add(array);
+//   clusterer.events.add("click", (e) => {
+//   let coords = e.get("target").geometry.getCoordinates();
+//       openBalloon(map, coords);
+//      });
+//   map.geoObjects.add(clusterer);
+// }
+
+
+function clusterInit(map, array) {
+  var clusterer = new ymaps.Clusterer({
+    clusterDisableClickZoom: true,
+    groupByCoordinates: true,
+    clusterOpenBalloonOnClick: false
+  });
+  clusterer.add(array);
+  map.geoObjects.add(clusterer);
+  return clusterer;
 }
 
 function openBalloon(map, coords) {
@@ -229,6 +242,14 @@ function updateBalloon(samePlaceMarks) {
   }
 }
 
+function arrayCompare(a, b) {
+  for (var i = 0; i < a.length; i++) {
+    if (a[i] != b[i]) return false;
+  }
+
+  return true;
+}
+
 
 
 /***/ }),
@@ -251,9 +272,9 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 
   return "      <li class=\"feedbacks_item feedback\">\r\n        <div class=\"feedback__top\">\r\n          <div class=\"feedback__name\">"
     + alias4(((helper = (helper = lookupProperty(helpers,"name") || (depth0 != null ? lookupProperty(depth0,"name") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"name","hash":{},"data":data,"loc":{"start":{"line":4,"column":38},"end":{"line":4,"column":48}}}) : helper)))
-    + "</div>\r\n          <div class=\"feedback__place\">"
-    + alias4(((helper = (helper = lookupProperty(helpers,"place") || (depth0 != null ? lookupProperty(depth0,"place") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"place","hash":{},"data":data,"loc":{"start":{"line":5,"column":39},"end":{"line":5,"column":50}}}) : helper)))
-    + "</div>\r\n        </div>\r\n        <div class=\"feedback__text\">"
+    + "</div>\r\n          <div class=\"feedback__place\">["
+    + alias4(((helper = (helper = lookupProperty(helpers,"place") || (depth0 != null ? lookupProperty(depth0,"place") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"place","hash":{},"data":data,"loc":{"start":{"line":5,"column":40},"end":{"line":5,"column":51}}}) : helper)))
+    + "]</div>\r\n        </div>\r\n        <div class=\"feedback__text\">"
     + alias4(((helper = (helper = lookupProperty(helpers,"feedback") || (depth0 != null ? lookupProperty(depth0,"feedback") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"feedback","hash":{},"data":data,"loc":{"start":{"line":7,"column":36},"end":{"line":7,"column":50}}}) : helper)))
     + "</div>\r\n      </li>\r\n";
 },"compiler":[8,">= 4.3.0"],"main":function(container,depth0,helpers,partials,data) {

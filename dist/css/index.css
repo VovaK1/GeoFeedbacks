@@ -50,7 +50,8 @@ input {
   margin-bottom: 10px; }
 
 .feedback {
-  max-height: 50px; }
+  max-height: 50px;
+  margin-bottom: 5px; }
   .feedback__top {
     display: inline-flex; }
   .feedback__name {
