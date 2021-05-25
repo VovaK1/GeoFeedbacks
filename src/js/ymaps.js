@@ -16,22 +16,13 @@ var myMap;
      })
 }
 
-// function clusterInit(map, array) {
-//   clusterer.add(array);
-//   clusterer.events.add("click", (e) => {
-//   let coords = e.get("target").geometry.getCoordinates();
-//       openBalloon(map, coords);
-//      });
-//   map.geoObjects.add(clusterer);
-// }
-
-function clusterInit(map, array) {
+function clusterInit(map) {
     const clusterer = new ymaps.Clusterer({
       clusterDisableClickZoom: true,
       groupByCoordinates: true,
       clusterOpenBalloonOnClick: false,
     });
-    clusterer.add(array);
+    // clusterer.add(array);
     map.geoObjects.add(clusterer);
     return clusterer;
 }

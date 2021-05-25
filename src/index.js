@@ -8,11 +8,23 @@ import './styles/main.scss'
 
 (async () => {
 const map = await mapInit();
-let placemarks = getPlacemarks();
+const clusterer = await clusterInit(map);
+let placemarks = getPlacemarks(); 
+let coords = [];
+clusterer.events.add('click', e => {
+  coords = e.get('target').geometry.getCoordinates();
+   const samePlaceMarks = [];
+   placemarks.forEach(function(currentMark) {
+     if (arrayCompare(currentMark.coords, coords)) {
+       samePlaceMarks.push(currentMark);
+     }
+   })
+ updateBalloon(samePlaceMarks);
+ openBalloon(map, coords);
+})
 
 updateMap(placemarks, map);
 
-let coords = [];
 
 map.events.add('click', e => {
 coords = e.get('coords');
@@ -32,7 +44,6 @@ document.addEventListener('click', e => {
     placemarks.push(feedback);
     updateStorage(placemarks);
     updateMap(placemarks, map);
-   
     updateBalloon()
     map.balloon.close();
   } else {
@@ -40,26 +51,13 @@ document.addEventListener('click', e => {
   }}
 })
 
-function updateMap(placemarks, map) {
+function updateMap(placemarks, map) {   
+  clusterer.removeAll();
   if (placemarks) {
-    const myGeoObjects = [];
     for (let item of placemarks) {
       let placemark = new ymaps.Placemark(item.coords);
-      myGeoObjects.push(placemark);
       map.geoObjects.add(placemark);
-      const clusterer =  clusterInit(map, myGeoObjects);  
-      clusterer.events.add('click', e => {
-         coords = e.get('target').geometry.getCoordinates();
-          console.log(coords)
-          const samePlaceMarks = [];
-          placemarks.forEach(function(currentMark) {
-            if (arrayCompare(currentMark.coords, coords)) {
-              samePlaceMarks.push(currentMark);
-            }
-          })
-        updateBalloon(samePlaceMarks);
-        coords = openBalloon(map, coords);
-      })
+      clusterer.add(placemark);
     }
   }
  } 
